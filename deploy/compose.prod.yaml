@@ -1,0 +1,39 @@
+name: ecowatt
+services:
+  web:
+    build: { context: .., dockerfile: Dockerfile }
+    container_name: ecowatt-web
+    ports: ["8080:80"]
+    depends_on: [ecowatt-api]
+    restart: unless-stopped
+
+  ecowatt-api:
+    build: { context: ../../backend, dockerfile: EcoWatt.Api/Dockerfile }
+    container_name: ecowatt-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=5069
+      - ConnectionStrings__Default=Server=sqlserver,1433;Database=EcoWatt;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
+      - Jwt__Chave=${JWT_CHAVE}
+    depends_on:
+      sqlserver: { condition: service_healthy }
+    restart: unless-stopped
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ecowatt-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    volumes: ["ecowatt-mssql-data:/var/opt/mssql"]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  ecowatt-mssql-data:
