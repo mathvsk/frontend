@@ -1,3 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+@theme {
+  --color-bg: #0F0F10;
+  --color-surface: #1A1A1C;
+  --color-card: #242427;
+  --color-border: #2E2E31;
+  --color-primary: #E6B33E;
+  --color-on-primary: #1A1407;
+  --color-content: #F5F5F4;
+  --color-muted: #A1A1AA;
+  --color-ok: #4ADE80;
+  --color-danger: #F87171;
+
+  --radius-field: 8px;
+  --radius-card: 12px;
+  --radius-sheet: 16px;
+
+  --text-hero: 44px;
+  --text-h1: 22px;
+  --text-h2: 18px;
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-content);
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
