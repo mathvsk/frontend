@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ResidenciaSelecionadaService } from '../../../core/api/residencia-selecionada.service';
+import { AlertaService } from '../../../core/api/alerta.service';
 import { Residencia } from '../../../core/models/api.models';
 
 @Component({
@@ -21,6 +22,9 @@ import { Residencia } from '../../../core/models/api.models';
           <option value="" disabled>Nenhuma residência</option>
         }
       </select>
+      <a routerLink="/alertas" class="relative flex min-h-[44px] items-center px-2 text-muted" aria-label="Alertas">
+        Alertas @if (naoLidos() > 0) { <span class="ml-1 rounded-full bg-primary px-1.5 text-[11px] text-on-primary">{{ naoLidos() }}</span> }
+      </a>
       <button (click)="sair()" class="min-h-[44px] shrink-0 text-[13px] text-muted">Sair</button>
     </header>
     <main class="mx-auto max-w-[448px] px-4 pb-24 pt-4"><router-outlet /></main>
@@ -34,11 +38,18 @@ import { Residencia } from '../../../core/models/api.models';
 export class AppShell implements OnInit {
   private auth = inject(AuthService);
   private sel = inject(ResidenciaSelecionadaService);
+  private alertaService = inject(AlertaService);
 
   lista = this.sel.lista;
   atual = this.sel.atual;
+  naoLidos = signal(0);
 
-  ngOnInit(): void { this.sel.carregar(); }
+  ngOnInit(): void {
+    this.sel.carregar();
+    this.alertaService.listar().subscribe((alertas) =>
+      this.naoLidos.set(alertas.filter((a) => !a.lido).length)
+    );
+  }
 
   onSelChange(event: Event): void {
     const id = Number((event.target as HTMLSelectElement).value);
