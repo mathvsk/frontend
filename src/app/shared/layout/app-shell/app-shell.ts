@@ -1,23 +1,50 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ResidenciaSelecionadaService } from '../../../core/api/residencia-selecionada.service';
+import { Residencia } from '../../../core/models/api.models';
 
 @Component({
   selector: 'app-shell',
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   template: `
-    <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-surface px-4">
-      <span class="font-medium">EcoWatt</span>
-      <button (click)="sair()" class="min-h-[44px] text-[13px] text-muted">Sair</button>
+    <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-surface px-4 gap-3">
+      <span class="font-medium shrink-0">EcoWatt</span>
+      <select
+        aria-label="Residência ativa"
+        class="min-h-[44px] flex-1 rounded-field border border-border bg-surface px-2 text-[13px] text-content outline-none focus:border-primary"
+        [value]="atual()?.id ?? ''"
+        (change)="onSelChange($event)">
+        @for (r of lista(); track r.id) {
+          <option [value]="r.id">{{ r.apelido }}</option>
+        } @empty {
+          <option value="" disabled>Nenhuma residência</option>
+        }
+      </select>
+      <button (click)="sair()" class="min-h-[44px] shrink-0 text-[13px] text-muted">Sair</button>
     </header>
     <main class="mx-auto max-w-[448px] px-4 pb-24 pt-4"><router-outlet /></main>
     <nav class="fixed inset-x-0 bottom-0 mx-auto flex max-w-[448px] justify-around border-t border-border bg-surface pb-[env(safe-area-inset-bottom)]">
       <a routerLink="/" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact:true}" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted">Início</a>
       <a routerLink="/historico" routerLinkActive="text-primary" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted">Histórico</a>
+      <a routerLink="/residencias" routerLinkActive="text-primary" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted">Residências</a>
       <a routerLink="/dicas" routerLinkActive="text-primary" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted">Dicas</a>
     </nav>`,
 })
-export class AppShell {
+export class AppShell implements OnInit {
   private auth = inject(AuthService);
+  private sel = inject(ResidenciaSelecionadaService);
+
+  lista = this.sel.lista;
+  atual = this.sel.atual;
+
+  ngOnInit(): void { this.sel.carregar(); }
+
+  onSelChange(event: Event): void {
+    const id = Number((event.target as HTMLSelectElement).value);
+    const r = this.lista().find((x: Residencia) => x.id === id);
+    if (r) this.sel.selecionar(r);
+  }
+
   sair(): void { this.auth.logout(); location.href = '/login'; }
 }
