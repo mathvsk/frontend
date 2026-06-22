@@ -9,7 +9,7 @@ import { UiTextField } from '../../../shared/ui/ui-text-field';
   imports: [UiButton, UiTextField],
   template: `
     <main class="mx-auto flex min-h-screen max-w-[448px] flex-col justify-center gap-5 px-4">
-      <h1 class="text-[length:--text-h1] font-medium">Criar conta</h1>
+      <h1 class="text-h1 font-medium">Criar conta</h1>
       <app-text-field label="Nome completo" [value]="nome()" (valueChange)="nome.set($event)" />
       <app-text-field label="E-mail" type="email" [value]="email()" (valueChange)="email.set($event)" />
       <app-text-field label="Senha" type="password" [value]="senha()" (valueChange)="senha.set($event)" />

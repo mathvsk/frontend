@@ -10,9 +10,9 @@ import { UiTextField } from '../../../shared/ui/ui-text-field';
   template: `
     <main class="mx-auto flex min-h-screen max-w-[448px] flex-col justify-center gap-6 px-4">
       <div class="text-center">
-        <i class="text-[--color-primary]" aria-hidden="true"></i>
-        <h1 class="text-[length:--text-h1] font-medium">EcoWatt</h1>
-        <p class="text-[13px] text-[--color-muted]">Gestão de consumo de energia</p>
+        <i class="text-primary" aria-hidden="true"></i>
+        <h1 class="text-h1 font-medium">EcoWatt</h1>
+        <p class="text-[13px] text-muted">Gestão de consumo de energia</p>
       </div>
       <app-text-field label="E-mail" type="email" [value]="email()" (valueChange)="email.set($event)" />
       <app-text-field label="Senha" type="password" [value]="senha()" (valueChange)="senha.set($event)" [erro]="erro()" />

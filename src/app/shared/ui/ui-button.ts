@@ -4,10 +4,10 @@ import { Component, input } from '@angular/core';
   selector: 'app-button',
   template: `
     <button [type]="type()" [disabled]="disabled()"
-      class="w-full min-h-[48px] rounded-[--radius-field] px-4 text-[15px] font-medium transition-colors"
+      class="w-full min-h-[48px] rounded-field px-4 text-[15px] font-medium transition-colors"
       [class]="variant() === 'primary'
-        ? 'bg-[--color-primary] text-[--color-on-primary] active:scale-[0.99] disabled:opacity-50'
-        : 'border border-[--color-border] text-[--color-content] active:bg-[--color-surface]'">
+        ? 'bg-primary text-on-primary active:scale-[0.99] disabled:opacity-50'
+        : 'border border-border text-content active:bg-surface'">
       <ng-content />
     </button>`,
 })
