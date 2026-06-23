@@ -13,11 +13,11 @@ export interface CriarResidencia {
 
 export interface RegistrarLeitura {
   mesReferencia: number; anoReferencia: number; origem: OrigemLeitura;
-  valorMedidor?: number | null; consumoKwh?: number | null;
+  valorMedidor?: number | null; consumoKwh?: number | null; valorFatura?: number | null;
 }
 export interface Leitura { id: number; consumoKwh: number; custoEstimado: number; }
 
-export interface HistoricoItem { mes: number; ano: number; consumoKwh: number; custoEstimado: number; }
+export interface HistoricoItem { id: number; mes: number; ano: number; consumoKwh: number; custoEstimado: number; limiteKwh?: number | null; }
 export interface Dashboard { consumoMesKwh: number; custoMesEstimado: number; historico: HistoricoItem[]; }
 
 export interface DefinirMeta {
