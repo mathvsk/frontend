@@ -2,13 +2,27 @@ import { describe, it, expect } from 'vitest';
 import { montarDashboardVm } from './dashboard.vm';
 
 describe('montarDashboardVm', () => {
-  it('compõe consumo, projeção, %, folga e comparativo', () => {
-    const vm = montarDashboardVm({ consumoMesKwh: 214, custoMesEstimado: 200, historico: [] }, 320, 342, 22, 30);
-    expect(vm.consumoMesKwh).toBe(214);
-    expect(Math.round(vm.projecao)).toBe(292);
-    expect(vm.percentualConsumido).toBeCloseTo(0.669, 2);
-    expect(Math.round(vm.folga)).toBe(28);
-    expect(vm.noControle).toBe(true);
-    expect(vm.diferencaMedia).toBe(50);
+  it('usa o real quando há leitura do mês atual', () => {
+    const vm = montarDashboardVm(
+      { consumoMesKwh: 214, custoMesEstimado: 200, historico: [
+        { id: 1, mes: 5, ano: 2026, consumoKwh: 214, custoEstimado: 200 },
+      ] }, 320, 342, 5, 2026);
+    expect(vm.ehReal).toBe(true);
+    expect(vm.previstoKwh).toBe(214);
+    expect(vm.previstoValor).toBe(200);
+    expect(vm.temMeta).toBe(true);
+    expect(vm.folga).toBe(106);
+  });
+
+  it('prevê pela média do histórico quando não há mês atual', () => {
+    const vm = montarDashboardVm(
+      { consumoMesKwh: 0, custoMesEstimado: 0, historico: [
+        { id: 1, mes: 3, ano: 2026, consumoKwh: 200, custoEstimado: 180 },
+        { id: 2, mes: 4, ano: 2026, consumoKwh: 300, custoEstimado: 260 },
+      ] }, 0, 0, 5, 2026);
+    expect(vm.ehReal).toBe(false);
+    expect(vm.previstoKwh).toBe(250);
+    expect(vm.previstoValor).toBe(220);
+    expect(vm.temMeta).toBe(false);
   });
 });
