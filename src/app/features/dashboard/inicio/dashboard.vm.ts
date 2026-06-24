@@ -1,32 +1,25 @@
 import { Dashboard } from '../../../core/models/api.models';
-import { projetarConsumo, calcularFolga } from '../../../core/utils/consumo.utils';
+import { calcularFolga, mediaHistorico } from '../../../core/utils/consumo.utils';
 
 export interface DashboardVm {
-  consumoMesKwh: number;
-  projecao: number;
-  percentualConsumido: number;
-  folga: number;
-  noControle: boolean;
-  mediaRegionalKwh: number;
-  diferencaMedia: number;
+  previstoKwh: number; previstoValor: number; ehReal: boolean;
+  percentualConsumido: number; folga: number; temMeta: boolean; noControle: boolean;
+  mediaRegionalKwh: number; diferencaMedia: number;
 }
 
 export function montarDashboardVm(
-  d: Dashboard,
-  limiteKwh: number,
-  mediaRegionalKwh: number,
-  diaAtual: number,
-  diasNoMes: number
+  d: Dashboard, limiteKwh: number, mediaRegionalKwh: number, mesAtual: number, anoAtual: number,
 ): DashboardVm {
-  const projecao = projetarConsumo(d.consumoMesKwh, diaAtual, diasNoMes);
-  const folga = calcularFolga(limiteKwh, projecao);
+  const temReal = d.consumoMesKwh > 0;
+  const media = mediaHistorico(d.historico);
+  const previstoKwh = temReal ? d.consumoMesKwh : media.kwh;
+  const previstoValor = temReal ? d.custoMesEstimado : media.valor;
+  const temMeta = limiteKwh > 0;
+  const folga = calcularFolga(limiteKwh, previstoKwh);
   return {
-    consumoMesKwh: d.consumoMesKwh,
-    projecao,
-    percentualConsumido: limiteKwh > 0 ? d.consumoMesKwh / limiteKwh : 0,
-    folga,
-    noControle: folga >= 0,
-    mediaRegionalKwh,
-    diferencaMedia: Math.round(mediaRegionalKwh - projecao),
+    previstoKwh, previstoValor, ehReal: temReal,
+    percentualConsumido: temMeta ? previstoKwh / limiteKwh : 0,
+    folga, temMeta, noControle: folga >= 0,
+    mediaRegionalKwh, diferencaMedia: Math.round(mediaRegionalKwh - previstoKwh),
   };
 }
