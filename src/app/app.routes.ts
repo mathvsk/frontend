@@ -14,6 +14,7 @@ export const routes: Routes = [
       { path: 'historico', loadComponent: () => import('./features/historico/historico').then(m => m.Historico) },
       { path: 'residencias', loadComponent: () => import('./features/residencias/residencias').then(m => m.Residencias) },
       { path: 'leituras/registrar', loadComponent: () => import('./features/leituras/registrar/registrar-leitura').then(m => m.RegistrarLeituraPage) },
+      { path: 'leituras/:id/editar', loadComponent: () => import('./features/leituras/registrar/registrar-leitura').then(m => m.RegistrarLeituraPage) },
       { path: 'metas', loadComponent: () => import('./features/metas/definir/definir-meta').then(m => m.DefinirMeta) },
       { path: 'alertas', loadComponent: () => import('./features/alertas/alertas').then(m => m.Alertas) },
       { path: 'dicas', loadComponent: () => import('./features/dicas/dicas').then(m => m.Dicas) },
