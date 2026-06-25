@@ -32,23 +32,31 @@ import { Residencia } from '../../../core/models/api.models';
         Sair
       </button>
     </header>
-    <main class="mx-auto max-w-[448px] px-4 pb-24 pt-4"><router-outlet /></main>
+    <main class="mx-auto max-w-[448px] px-4 pb-24 pt-4">
+      <div [class.animate-in]="rotaAnim()" [class.fade-in]="rotaAnim()" class="duration-200">
+        <router-outlet (activate)="onActivate()" />
+      </div>
+    </main>
     <nav class="fixed inset-x-0 bottom-0 mx-auto flex max-w-[448px] justify-around border-t border-border bg-surface pb-[env(safe-area-inset-bottom)]">
-      <a routerLink="/" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact:true}" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted">
+      <a routerLink="/" routerLinkActive="text-primary nav-active" [routerLinkActiveOptions]="{exact:true}" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted transition-colors">
         <ng-icon name="lucideHouse" size="20"></ng-icon>
         Início
+        <span class="nav-dot mt-0.5 h-1 w-1 rounded-full bg-primary"></span>
       </a>
-      <a routerLink="/historico" routerLinkActive="text-primary" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted">
+      <a routerLink="/historico" routerLinkActive="text-primary nav-active" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted transition-colors">
         <ng-icon name="lucideChartBar" size="20"></ng-icon>
         Histórico
+        <span class="nav-dot mt-0.5 h-1 w-1 rounded-full bg-primary"></span>
       </a>
-      <a routerLink="/residencias" routerLinkActive="text-primary" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted">
+      <a routerLink="/residencias" routerLinkActive="text-primary nav-active" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted transition-colors">
         <ng-icon name="lucideBuilding" size="20"></ng-icon>
         Residências
+        <span class="nav-dot mt-0.5 h-1 w-1 rounded-full bg-primary"></span>
       </a>
-      <a routerLink="/dicas" routerLinkActive="text-primary" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted">
+      <a routerLink="/dicas" routerLinkActive="text-primary nav-active" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted transition-colors">
         <ng-icon name="lucideLightbulb" size="20"></ng-icon>
         Dicas
+        <span class="nav-dot mt-0.5 h-1 w-1 rounded-full bg-primary"></span>
       </a>
     </nav>`,
 })
@@ -60,6 +68,12 @@ export class AppShell implements OnInit {
   lista = this.sel.lista;
   atual = this.sel.atual;
   naoLidos = signal(0);
+  rotaAnim = signal(true);
+
+  onActivate(): void {
+    this.rotaAnim.set(false);
+    requestAnimationFrame(() => this.rotaAnim.set(true));
+  }
 
   ngOnInit(): void {
     this.sel.carregar();
