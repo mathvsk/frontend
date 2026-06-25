@@ -1,4 +1,4 @@
-import { Directive, ElementRef, effect, inject, input } from '@angular/core';
+import { Directive, ElementRef, effect, inject, input, untracked } from '@angular/core';
 
 /** Interpolação com easeOutCubic; progresso fora de [0,1] é "clampado". */
 export function valorAnimado(de: number, ate: number, progresso: number): number {
@@ -15,8 +15,9 @@ export class CountUpDirective {
   private atual = 0;
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const destino = this.valor();
+      const dur = untracked(() => this.duracao());
       const semMovimento = typeof matchMedia !== 'undefined'
         && matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (semMovimento || typeof requestAnimationFrame === 'undefined') {
@@ -26,14 +27,18 @@ export class CountUpDirective {
       }
       const de = this.atual;
       const inicio = performance.now();
-      const dur = this.duracao();
+      let rafId = 0;
       const passo = (t: number) => {
         const progresso = (t - inicio) / dur;
         this.render(valorAnimado(de, destino, progresso));
-        if (progresso < 1) requestAnimationFrame(passo);
-        else this.atual = destino;
+        if (progresso < 1) {
+          rafId = requestAnimationFrame(passo);
+        } else {
+          this.atual = destino;
+        }
       };
-      requestAnimationFrame(passo);
+      rafId = requestAnimationFrame(passo);
+      onCleanup(() => cancelAnimationFrame(rafId));
     });
   }
 
