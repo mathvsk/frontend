@@ -4,16 +4,17 @@ import { DashboardService } from '../../../core/api/dashboard.service';
 import { MetaService } from '../../../core/api/meta.service';
 import { ResidenciaSelecionadaService } from '../../../core/api/residencia-selecionada.service';
 import { UiCard } from '../../../shared/ui/ui-card';
+import { CountUpDirective } from '../../../shared/ui/count-up.directive';
 import { montarDashboardVm, DashboardVm } from './dashboard.vm';
 
 @Component({
   selector: 'app-inicio',
-  imports: [UiCard, RouterLink],
+  imports: [UiCard, RouterLink, CountUpDirective],
   template: `
     @if (vm(); as v) {
       <app-card>
         <p class="text-[13px] text-muted">{{ v.ehReal ? 'Consumo do mês' : 'Previsto (média do histórico)' }}</p>
-        <p class="text-hero font-semibold leading-none">{{ round(v.previstoKwh) }} <span class="text-[18px] text-muted">kWh</span></p>
+        <p class="text-hero font-semibold leading-none"><span [appCountUp]="round(v.previstoKwh)"></span> <span class="text-[18px] text-muted">kWh</span></p>
         <p class="mt-1 text-h2 font-medium text-primary">R$ {{ v.previstoValor.toFixed(2) }}</p>
         @if (v.temMeta) {
           <div class="mt-3 h-1.5 w-full rounded-full bg-surface">

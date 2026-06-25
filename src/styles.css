@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 @theme {
   --color-bg: #0F0F10;
@@ -28,3 +29,17 @@ html, body {
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 * { box-sizing: border-box; }
+
+/* Indicador de aba ativa da bottom-nav (animado via transform) */
+.nav-dot { transform: scale(0); transition: transform 0.2s ease; }
+.nav-active .nav-dot { transform: scale(1); }
+
+/* Acessibilidade: desliga toda animação/transição sob reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
