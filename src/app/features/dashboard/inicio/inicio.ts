@@ -16,6 +16,15 @@ import { montarDashboardVm, DashboardVm } from './dashboard.vm';
         <p class="text-[13px] text-muted">{{ v.ehReal ? 'Consumo do mês' : 'Previsto (média do histórico)' }}</p>
         <p class="text-hero font-semibold leading-none"><span [appCountUp]="round(v.previstoKwh)"></span> <span class="text-[18px] text-muted">kWh</span></p>
         <p class="mt-1 text-h2 font-medium text-primary">R$ {{ v.previstoValor.toFixed(2) }}</p>
+        @if (v.temMesPassado) {
+          <p class="mt-2 text-[13px] text-muted">
+            Mês passado: {{ round(v.mesPassadoKwh) }} kWh · R$ {{ v.mesPassadoValor.toFixed(2) }}
+            <span [class.text-danger]="v.deltaMesPassadoPct > 0" [class.text-ok]="v.deltaMesPassadoPct < 0">
+              @if (v.deltaMesPassadoPct > 0) { ▲ } @else if (v.deltaMesPassadoPct < 0) { ▼ }
+              {{ round(Math.abs(v.deltaMesPassadoPct)) }}%
+            </span>
+          </p>
+        }
         @if (v.temMeta) {
           <div class="mt-3 h-1.5 w-full rounded-full bg-surface">
             <div class="h-1.5 rounded-full bg-primary" [style.width.%]="pct(v)"></div>
