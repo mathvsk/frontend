@@ -19,8 +19,9 @@ import { montarDashboardVm, DashboardVm } from './dashboard.vm';
         @if (v.temMesPassado) {
           <p class="mt-2 text-[13px] text-muted">
             Mês passado: {{ round(v.mesPassadoKwh) }} kWh · R$ {{ v.mesPassadoValor.toFixed(2) }}
-            <span [class.text-danger]="v.deltaMesPassadoPct > 0" [class.text-ok]="v.deltaMesPassadoPct <= 0">
-              {{ v.deltaMesPassadoPct > 0 ? '▲' : '▼' }} {{ round(Math.abs(v.deltaMesPassadoPct)) }}%
+            <span [class.text-danger]="v.deltaMesPassadoPct > 0" [class.text-ok]="v.deltaMesPassadoPct < 0">
+              @if (v.deltaMesPassadoPct > 0) { ▲ } @else if (v.deltaMesPassadoPct < 0) { ▼ }
+              {{ round(Math.abs(v.deltaMesPassadoPct)) }}%
             </span>
           </p>
         }
