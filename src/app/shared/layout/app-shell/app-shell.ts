@@ -1,36 +1,25 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ResidenciaSelecionadaService } from '../../../core/api/residencia-selecionada.service';
-import { AlertaService } from '../../../core/api/alerta.service';
-import { Residencia } from '../../../core/models/api.models';
 
 @Component({
   selector: 'app-shell',
   imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIcon],
   template: `
-    <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-surface px-4 gap-3">
-      <span class="font-medium shrink-0">EcoWatt</span>
-      <select
-        aria-label="Residência ativa"
-        class="min-h-[44px] flex-1 rounded-field border border-border bg-surface px-2 text-[13px] text-content outline-none focus:border-primary"
-        [value]="atual()?.id ?? ''"
-        (change)="onSelChange($event)">
-        @for (r of lista(); track r.id) {
-          <option [value]="r.id">{{ r.apelido }}</option>
-        } @empty {
-          <option value="" disabled>Nenhuma residência</option>
-        }
-      </select>
-      <a routerLink="/alertas" class="relative flex min-h-[44px] items-center px-2 text-muted" aria-label="Alertas">
-        <ng-icon name="lucideBell" size="20"></ng-icon>
-        Alertas @if (naoLidos() > 0) { <span class="ml-1 rounded-full bg-primary px-1.5 text-[11px] text-on-primary">{{ naoLidos() }}</span> }
-      </a>
-      <button (click)="sair()" class="min-h-[44px] shrink-0 flex items-center gap-1 text-[13px] text-muted">
-        <ng-icon name="lucideLogOut" size="16"></ng-icon>
-        Sair
-      </button>
+    <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-surface px-4">
+      <span class="font-medium">EcoWatt</span>
+      <div class="flex items-center gap-1">
+        <a routerLink="/residencia" class="flex min-h-[44px] items-center gap-1 px-2 text-[13px] text-muted" aria-label="Minha residência">
+          <ng-icon name="lucideBuilding" size="20"></ng-icon>
+          {{ atual()?.apelido ?? 'Residência' }}
+        </a>
+        <button (click)="sair()" class="flex min-h-[44px] items-center gap-1 px-2 text-[13px] text-muted" aria-label="Sair">
+          <ng-icon name="lucideLogOut" size="16"></ng-icon>
+          Sair
+        </button>
+      </div>
     </header>
     <main class="mx-auto max-w-[448px] px-4 pb-24 pt-4">
       <div [class.animate-in]="rotaAnim()" [class.fade-in]="rotaAnim()" class="duration-200">
@@ -43,14 +32,9 @@ import { Residencia } from '../../../core/models/api.models';
         Início
         <span class="nav-dot mt-0.5 h-1 w-1 rounded-full bg-primary"></span>
       </a>
-      <a routerLink="/historico" routerLinkActive="text-primary nav-active" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted transition-colors">
+      <a routerLink="/leituras" routerLinkActive="text-primary nav-active" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted transition-colors">
         <ng-icon name="lucideChartBar" size="20"></ng-icon>
-        Histórico
-        <span class="nav-dot mt-0.5 h-1 w-1 rounded-full bg-primary"></span>
-      </a>
-      <a routerLink="/residencias" routerLinkActive="text-primary nav-active" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted transition-colors">
-        <ng-icon name="lucideBuilding" size="20"></ng-icon>
-        Residências
+        Leituras
         <span class="nav-dot mt-0.5 h-1 w-1 rounded-full bg-primary"></span>
       </a>
       <a routerLink="/dicas" routerLinkActive="text-primary nav-active" class="flex min-h-[44px] flex-1 flex-col items-center justify-center py-2 text-[11px] text-muted transition-colors">
@@ -60,32 +44,18 @@ import { Residencia } from '../../../core/models/api.models';
       </a>
     </nav>`,
 })
-export class AppShell implements OnInit {
+export class AppShell {
   private auth = inject(AuthService);
   private sel = inject(ResidenciaSelecionadaService);
-  private alertaService = inject(AlertaService);
 
-  lista = this.sel.lista;
   atual = this.sel.atual;
-  naoLidos = signal(0);
   rotaAnim = signal(true);
+
+  constructor() { this.sel.carregar(); }
 
   onActivate(): void {
     this.rotaAnim.set(false);
     requestAnimationFrame(() => this.rotaAnim.set(true));
-  }
-
-  ngOnInit(): void {
-    this.sel.carregar();
-    this.alertaService.listar().subscribe((alertas) =>
-      this.naoLidos.set(alertas.filter((a) => !a.lido).length)
-    );
-  }
-
-  onSelChange(event: Event): void {
-    const id = Number((event.target as HTMLSelectElement).value);
-    const r = this.lista().find((x: Residencia) => x.id === id);
-    if (r) this.sel.selecionar(r);
   }
 
   sair(): void { this.auth.logout(); location.href = '/login'; }

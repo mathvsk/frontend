@@ -5,13 +5,12 @@ import { Residencia } from '../models/api.models';
 @Injectable({ providedIn: 'root' })
 export class ResidenciaSelecionadaService {
   private service = inject(ResidenciaService);
-  readonly lista = signal<Residencia[]>([]);
   readonly atual = signal<Residencia | null>(null);
 
   async carregar(): Promise<void> {
-    const rs = await new Promise<Residencia[]>((res) => this.service.listar().subscribe(res));
-    this.lista.set(rs);
-    if (!this.atual() && rs.length) this.atual.set(rs[0]);
+    if (this.atual()) return;
+    const r = await new Promise<Residencia | null>((res) =>
+      this.service.me().subscribe({ next: res, error: () => res(null) }));
+    this.atual.set(r);
   }
-  selecionar(r: Residencia): void { this.atual.set(r); }
 }
