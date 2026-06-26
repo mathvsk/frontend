@@ -43,6 +43,8 @@ const MESES = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'
         <p class="mb-3">Cadastre sua residência para começar.</p>
         <a routerLink="/residencia"><app-button>Cadastrar residência</app-button></a>
       </app-card>
+    } @else if (erro()) {
+      <app-card><p class="text-danger">{{ erro() }}</p></app-card>
     }`,
 })
 export class Inicio {
@@ -53,6 +55,7 @@ export class Inicio {
   historico = signal<HistoricoItem[]>([]);
   metric = signal<'kwh' | 'valor'>('kwh');
   semResidencia = signal(false);
+  erro = signal<string | null>(null);
   options: ChartConfiguration<'bar'>['options'] = { responsive: true, plugins: { legend: { display: false } } };
 
   data = computed<ChartConfiguration<'bar'>['data']>(() => ({
@@ -67,9 +70,12 @@ export class Inicio {
     await this.sel.carregar();
     const r = this.sel.atual();
     if (!r) { this.semResidencia.set(true); return; }
-    this.dash.obter(r.id).subscribe(d => {
-      this.historico.set(d.historico ?? []);
-      this.vm.set(montarDashboardVm(d));
+    this.dash.obter(r.id).subscribe({
+      next: (d) => {
+        this.historico.set(d.historico ?? []);
+        this.vm.set(montarDashboardVm(d));
+      },
+      error: (e) => this.erro.set(e?.mensagem ?? 'Falha ao carregar o painel.'),
     });
   }
 }
