@@ -29,6 +29,11 @@ export class AuthService {
     await firstValueFrom(this.http.post(`${this.base}/auth/register`, { nome, email, senha }));
   }
 
+  aplicarToken(token: string): void {
+    localStorage.setItem(TOKEN_KEY, token);
+    this.usuarioAtual.set(this.fromStorage());
+  }
+
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     this.usuarioAtual.set(null);

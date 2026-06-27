@@ -9,6 +9,7 @@ import { provideIcons } from '@ng-icons/core';
 import {
   lucideHouse, lucideChartBar, lucideBuilding, lucideLightbulb,
   lucideBell, lucideLogOut, lucidePlus, lucidePencil, lucideTrash2,
+  lucideUser, lucideCamera, lucideLock,
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
@@ -23,6 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideIcons({
       lucideHouse, lucideChartBar, lucideBuilding, lucideLightbulb,
       lucideBell, lucideLogOut, lucidePlus, lucidePencil, lucideTrash2,
+      lucideUser, lucideCamera, lucideLock,
     }),
   ],
 };
