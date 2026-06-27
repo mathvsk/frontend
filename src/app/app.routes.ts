@@ -15,6 +15,7 @@ export const routes: Routes = [
       { path: 'leituras/registrar', loadComponent: () => import('./features/leituras/registrar/registrar-leitura').then(m => m.RegistrarLeituraPage) },
       { path: 'leituras/:id/editar', loadComponent: () => import('./features/leituras/registrar/registrar-leitura').then(m => m.RegistrarLeituraPage) },
       { path: 'residencia', loadComponent: () => import('./features/residencia/residencia').then(m => m.ResidenciaPage) },
+      { path: 'perfil', loadComponent: () => import('./features/perfil/perfil').then(m => m.Perfil) },
       { path: 'dicas', loadComponent: () => import('./features/dicas/dicas').then(m => m.Dicas) },
       { path: 'dicas/gerenciar', loadComponent: () => import('./features/dicas/dica-form').then(m => m.DicaForm), canActivate: [adminGuard] },
     ],

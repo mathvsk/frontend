@@ -32,3 +32,9 @@ export interface Dashboard {
 
 export interface Dica { id: number; titulo: string; conteudo: string; categoria: string; }
 export interface DicaRequest { titulo: string; conteudo: string; categoria: string; }
+
+export interface UsuarioPerfil { id: number; nome: string; email: string; fotoUrl: string | null; perfil: Perfil; }
+export interface AtualizarPerfil { nome: string; email: string; senhaAtual?: string | null; }
+export interface AtualizarPerfilResponse { usuario: UsuarioPerfil; token: string | null; }
+export interface AlterarSenha { senhaAtual: string; novaSenha: string; }
+export interface FotoResponse { fotoUrl: string; }
