@@ -12,6 +12,10 @@ import { montarDashboardVm, DashboardVm } from './dashboard.vm';
 
 const MESES = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
+export function formatarTooltip(metric: 'kwh' | 'valor', valor: number): string {
+  return metric === 'kwh' ? `${Math.round(valor)} kWh` : `R$ ${valor.toFixed(2)}`;
+}
+
 @Component({
   selector: 'app-inicio',
   imports: [UiCard, UiButton, RouterLink, CountUpDirective, BaseChartDirective],
@@ -56,7 +60,13 @@ export class Inicio {
   metric = signal<'kwh' | 'valor'>('kwh');
   semResidencia = signal(false);
   erro = signal<string | null>(null);
-  options: ChartConfiguration<'bar'>['options'] = { responsive: true, plugins: { legend: { display: false } } };
+  options: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: (ctx) => formatarTooltip(this.metric(), ctx.parsed.y ?? 0) } },
+    },
+  };
 
   data = computed<ChartConfiguration<'bar'>['data']>(() => ({
     labels: this.historico().map(l => MESES[l.mes]),
