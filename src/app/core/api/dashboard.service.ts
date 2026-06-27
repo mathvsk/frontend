@@ -6,8 +6,7 @@ import { Dashboard } from '../models/api.models';
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
   private http = inject(HttpClient);
-  obter(residenciaId: number, mes: number, ano: number) {
-    return this.http.get<Dashboard>(
-      `${environment.apiBaseUrl}/residencias/${residenciaId}/dashboard?mes=${mes}&ano=${ano}`);
+  obter(residenciaId: number) {
+    return this.http.get<Dashboard>(`${environment.apiBaseUrl}/residencias/${residenciaId}/dashboard`);
   }
 }
