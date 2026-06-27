@@ -8,7 +8,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideHouse, lucideChartBar, lucideBuilding, lucideLightbulb,
-  lucideBell, lucideLogOut, lucidePlus,
+  lucideBell, lucideLogOut, lucidePlus, lucidePencil, lucideTrash2,
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideIcons({
       lucideHouse, lucideChartBar, lucideBuilding, lucideLightbulb,
-      lucideBell, lucideLogOut, lucidePlus,
+      lucideBell, lucideLogOut, lucidePlus, lucidePencil, lucideTrash2,
     }),
   ],
 };
