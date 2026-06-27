@@ -28,8 +28,15 @@ html, body {
   color: var(--color-content);
   margin: 0;
   font-family: ui-sans-serif, system-ui, sans-serif;
+  /* Mantém o pinch-zoom (acessibilidade), mas desliga o double-tap-to-zoom que disparava ao tocar na tela. */
+  touch-action: manipulation;
+  /* Evita o "inflar" automático de texto do iOS ao girar o aparelho. */
+  -webkit-text-size-adjust: 100%;
 }
 * { box-sizing: border-box; }
+
+/* Fonte mínima de 16px em qualquer controle de formulário: abaixo disso o iOS dá zoom ao focar. */
+input, select, textarea { font-size: 16px; }
 
 /* Indicador de aba ativa da bottom-nav (animado via transform) */
 .nav-dot { transform: scale(0); transition: transform 0.2s ease; }

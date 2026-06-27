@@ -8,7 +8,7 @@ import { UiTextField } from '../../../shared/ui/ui-text-field';
   selector: 'app-login',
   imports: [UiButton, UiTextField],
   template: `
-    <main class="mx-auto flex min-h-screen max-w-[448px] flex-col justify-center gap-6 px-4">
+    <main class="mx-auto flex min-h-dvh max-w-[448px] flex-col justify-center gap-6 px-4">
       <div class="text-center">
         <i class="text-primary" aria-hidden="true"></i>
         <h1 class="text-h1 font-medium">EcoWatt</h1>
