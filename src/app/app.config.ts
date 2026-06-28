@@ -11,6 +11,7 @@ import {
   lucideBell, lucideLogOut, lucidePlus, lucidePencil, lucideTrash2,
   lucideUser, lucideCamera, lucideLock,
   lucideCalendar, lucideChevronLeft, lucideChevronRight,
+  lucideArrowUp, lucideArrowDown,
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
