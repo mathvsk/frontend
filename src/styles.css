@@ -28,6 +28,8 @@ html, body {
   color: var(--color-content);
   margin: 0;
   font-family: ui-sans-serif, system-ui, sans-serif;
+  /* Renderiza controles nativos (incl. o seletor de <input type="month"> e seu ícone) no tema escuro. */
+  color-scheme: dark;
   /* Mantém o pinch-zoom (acessibilidade), mas desliga o double-tap-to-zoom que disparava ao tocar na tela. */
   touch-action: manipulation;
   /* Evita o "inflar" automático de texto do iOS ao girar o aparelho. */

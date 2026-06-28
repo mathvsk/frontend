@@ -26,7 +26,7 @@ describe('RegistrarLeituraPage', () => {
   it('cria via POST quando não há id', () => {
     configurar(null);
     const cmp = TestBed.createComponent(RegistrarLeituraPage).componentInstance;
-    cmp.mes.set(5); cmp.ano.set(2026); cmp.consumoKwh.set(210); cmp.valor.set(300);
+    cmp.mesAno.set('2026-05'); cmp.consumo.set(210); cmp.valor.set(300);
     cmp.salvar();
     expect(leitura.registrar).toHaveBeenCalledWith(5, expect.objectContaining({ origem: 'Fatura', consumoKwh: 210, valorFatura: 300, mesReferencia: 5, anoReferencia: 2026 }));
     expect(leitura.atualizar).not.toHaveBeenCalled();
@@ -35,9 +35,18 @@ describe('RegistrarLeituraPage', () => {
   it('edita via PUT quando há id', () => {
     configurar('9');
     const cmp = TestBed.createComponent(RegistrarLeituraPage).componentInstance;
-    cmp.mes.set(5); cmp.ano.set(2026); cmp.consumoKwh.set(250); cmp.valor.set(410);
+    cmp.mesAno.set('2026-05'); cmp.consumo.set(250); cmp.valor.set(410);
     cmp.salvar();
     expect(leitura.atualizar).toHaveBeenCalledWith(5, 9, expect.objectContaining({ origem: 'Fatura', consumoKwh: 250, valorFatura: 410 }));
     expect(leitura.registrar).not.toHaveBeenCalled();
+  });
+
+  it('bloqueia o POST quando o consumo está vazio', () => {
+    configurar(null);
+    const cmp = TestBed.createComponent(RegistrarLeituraPage).componentInstance;
+    cmp.mesAno.set('2026-05'); cmp.consumo.set(null); cmp.valor.set(300);
+    cmp.salvar();
+    expect(leitura.registrar).not.toHaveBeenCalled();
+    expect(cmp.erro()).toBeTruthy();
   });
 });
