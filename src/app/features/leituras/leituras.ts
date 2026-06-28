@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
 import { DashboardService } from '../../core/api/dashboard.service';
 import { LeituraService } from '../../core/api/leitura.service';
@@ -14,9 +14,15 @@ export function formatarRefMesAno(mes: number, ano: number): string {
 
 @Component({
   selector: 'app-leituras',
-  imports: [NgIcon, UiConfirmDialog],
+  imports: [NgIcon, UiConfirmDialog, RouterLink],
   template: `
-    <h1 class="mb-4 text-h1 font-medium">Leituras</h1>
+    <div class="mb-4 flex items-center justify-between">
+      <h1 class="text-h1 font-medium">Leituras</h1>
+      <a routerLink="/leituras/registrar" aria-label="Adicionar leitura"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-field bg-primary text-on-primary transition hover:brightness-110 active:scale-95">
+        <ng-icon name="lucidePlus" size="20" />
+      </a>
+    </div>
     <table class="w-full text-[13px]">
       <thead><tr class="text-muted">
         <th class="py-2 text-left">Mês</th><th class="text-right">Consumo</th><th class="text-right">Valor</th><th></th>
@@ -28,19 +34,15 @@ export function formatarRefMesAno(mes: number, ano: number): string {
             <td class="text-right">
               <span class="whitespace-nowrap">{{ l.consumoKwh }} kWh</span>
               @if (l.variacao && l.variacao.deltaKwh !== 0) {
-                <span class="ml-1 inline-flex items-center gap-0.5 align-middle text-[11px] font-medium"
-                  [class]="l.variacao.deltaKwh > 0 ? 'text-danger' : 'text-ok'" [attr.aria-label]="rotuloVariacao(l.variacao.deltaKwh, 'kWh')">
-                  <ng-icon [name]="l.variacao.deltaKwh > 0 ? 'lucideArrowUp' : 'lucideArrowDown'" size="11" />{{ kwhAbs(l.variacao.deltaKwh) }}
-                </span>
+                <span class="ml-1 whitespace-nowrap align-middle text-[11px] font-medium"
+                  [class]="l.variacao.deltaKwh > 0 ? 'text-danger' : 'text-ok'" [attr.aria-label]="rotuloVariacao(l.variacao.deltaKwh, 'kWh')">{{ l.variacao.deltaKwh > 0 ? '▲' : '▼' }} {{ kwhAbs(l.variacao.deltaKwh) }}</span>
               }
             </td>
             <td class="text-right">
               <span class="whitespace-nowrap">R$ {{ l.custoEstimado.toFixed(2) }}</span>
               @if (l.variacao && l.variacao.deltaValor !== 0) {
-                <span class="ml-1 inline-flex items-center gap-0.5 align-middle text-[11px] font-medium"
-                  [class]="l.variacao.deltaValor > 0 ? 'text-danger' : 'text-ok'" [attr.aria-label]="rotuloVariacao(l.variacao.deltaValor, 'reais')">
-                  <ng-icon [name]="l.variacao.deltaValor > 0 ? 'lucideArrowUp' : 'lucideArrowDown'" size="11" />{{ valorAbs(l.variacao.deltaValor) }}
-                </span>
+                <span class="ml-1 whitespace-nowrap align-middle text-[11px] font-medium"
+                  [class]="l.variacao.deltaValor > 0 ? 'text-danger' : 'text-ok'" [attr.aria-label]="rotuloVariacao(l.variacao.deltaValor, 'reais')">{{ l.variacao.deltaValor > 0 ? '▲' : '▼' }} {{ valorAbs(l.variacao.deltaValor) }}</span>
               }
             </td>
             <td class="whitespace-nowrap py-1.5 text-right">
