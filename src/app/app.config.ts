@@ -11,7 +11,6 @@ import {
   lucideBell, lucideLogOut, lucidePlus, lucidePencil, lucideTrash2,
   lucideUser, lucideCamera, lucideLock,
   lucideCalendar, lucideChevronLeft, lucideChevronRight,
-  lucideArrowUp, lucideArrowDown,
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
@@ -29,5 +28,6 @@ export const appConfig: ApplicationConfig = {
       lucideUser, lucideCamera, lucideLock,
       lucideCalendar, lucideChevronLeft, lucideChevronRight,
     }),
+    // (setas dos indicadores usam ▲▼ Unicode — sem ícone registrado)
   ],
 };
