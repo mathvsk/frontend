@@ -13,7 +13,7 @@ import { Component, input, model } from '@angular/core';
 })
 export class UiTextField {
   label = input('');
-  type = input<'text' | 'email' | 'password' | 'number'>('text');
+  type = input<'text' | 'email' | 'password' | 'number' | 'month'>('text');
   placeholder = input('');
   erro = input<string | null>(null);
   value = model('');
