@@ -68,10 +68,14 @@ export class Inicio {
     },
   };
 
-  data = computed<ChartConfiguration<'bar'>['data']>(() => ({
-    labels: this.historico().map(l => MESES[l.mes]),
-    datasets: [{ data: this.historico().map(l => this.metric() === 'kwh' ? l.consumoKwh : l.custoEstimado), backgroundColor: '#E6B33E' }],
-  }));
+  data = computed<ChartConfiguration<'bar'>['data']>(() => {
+    // Gráfico sempre cronológico (mais antigo à esquerda), independente da ordem da API.
+    const ordenado = [...this.historico()].sort((a, b) => a.ano - b.ano || a.mes - b.mes);
+    return {
+      labels: ordenado.map(l => MESES[l.mes]),
+      datasets: [{ data: ordenado.map(l => this.metric() === 'kwh' ? l.consumoKwh : l.custoEstimado), backgroundColor: '#E6B33E' }],
+    };
+  });
 
   constructor() { this.carregar(); }
   round(n: number) { return Math.round(n); }
