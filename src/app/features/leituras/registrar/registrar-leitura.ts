@@ -6,16 +6,17 @@ import { Leitura, RegistrarLeitura } from '../../../core/models/api.models';
 import { UiButton } from '../../../shared/ui/ui-button';
 import { UiTextField } from '../../../shared/ui/ui-text-field';
 import { UiCurrencyField } from '../../../shared/ui/ui-currency-field';
+import { UiMonthField } from '../../../shared/ui/ui-month-field';
 import { UiCard } from '../../../shared/ui/ui-card';
 import { mesAnoAtual, mesAnoParaInput, mesAnoDeInput } from '../../../core/utils/mes-ano';
 
 @Component({
   selector: 'app-registrar-leitura',
-  imports: [UiButton, UiTextField, UiCurrencyField, UiCard],
+  imports: [UiButton, UiTextField, UiCurrencyField, UiMonthField, UiCard],
   template: `
     <h1 class="mb-6 text-h1 font-medium">{{ id() ? 'Editar gasto' : 'Adicionar gasto' }}</h1>
     <div class="flex flex-col gap-4">
-      <app-text-field label="Mês de referência" type="month" [value]="mesAno()" (valueChange)="mesAno.set($event)" />
+      <app-month-field label="Mês de referência" [(value)]="mesAno" />
       <app-text-field label="Consumo (kWh)" type="number" placeholder="Ex.: 350"
         [value]="consumo() === null ? '' : String(consumo())" (valueChange)="consumo.set($event === '' ? null : +$event)" />
       <app-currency-field label="Valor da fatura" placeholder="R$ 0,00" [(value)]="valor" />
