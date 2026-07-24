@@ -10,7 +10,10 @@ interface UsuarioAtual { id: number; email: string; perfil: Perfil; }
 
 // Render free tier derruba o backend após inatividade; essas respostas indicam
 // que ele ainda está "acordando", não um erro real — vale tentar de novo.
-const STATUS_COLD_START = [0, 502, 503, 504];
+// 429 aqui não é rate limit do backend: é o próprio edge do Render recusando
+// pings de wake-up repetidos enquanto o serviço hiberna
+// (header X-Render-Routing: hibernate-rate-limited).
+const STATUS_COLD_START = [0, 429, 502, 503, 504];
 const TENTATIVAS_COLD_START = 5;
 
 function retryColdStart<T>(onTentativa?: (tentativa: number) => void) {
@@ -19,7 +22,7 @@ function retryColdStart<T>(onTentativa?: (tentativa: number) => void) {
     delay: (erro: { status?: number }, tentativa) => {
       if (!STATUS_COLD_START.includes(erro?.status ?? -1)) throw erro;
       onTentativa?.(tentativa);
-      return timer(tentativa * 4000);
+      return timer(tentativa * 5000);
     },
   });
 }
