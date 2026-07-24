@@ -23,8 +23,8 @@ describe('Cadastro', () => {
     const cmp = TestBed.createComponent(Cadastro).componentInstance;
     cmp.nome.set('Ana'); cmp.email.set('a@b.com'); cmp.senha.set('Senha@123'); cmp.confirmar.set('Senha@123');
     await cmp.criar();
-    expect(auth.register).toHaveBeenCalledWith('Ana', 'a@b.com', 'Senha@123');
-    expect(auth.login).toHaveBeenCalledWith('a@b.com', 'Senha@123');
+    expect(auth.register).toHaveBeenCalledWith('Ana', 'a@b.com', 'Senha@123', expect.any(Function));
+    expect(auth.login).toHaveBeenCalledWith('a@b.com', 'Senha@123', expect.any(Function));
     expect(router.navigate).toHaveBeenCalledWith(['/']);
   });
 });

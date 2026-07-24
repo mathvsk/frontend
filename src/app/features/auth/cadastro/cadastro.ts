@@ -14,6 +14,7 @@ import { UiTextField } from '../../../shared/ui/ui-text-field';
       <app-text-field label="E-mail" type="email" [value]="email()" (valueChange)="email.set($event)" />
       <app-text-field label="Senha" type="password" [value]="senha()" (valueChange)="senha.set($event)" />
       <app-text-field label="Confirmar senha" type="password" [value]="confirmar()" (valueChange)="confirmar.set($event)" [erro]="erro()" />
+      @if (aviso()) { <p class="text-center text-[13px] text-muted">{{ aviso() }}</p> }
       <app-button type="button" [disabled]="carregando()" (click)="criar()">Continuar</app-button>
       <app-button variant="ghost" (click)="irLogin()">Já tenho conta</app-button>
     </main>`,
@@ -22,20 +23,22 @@ export class Cadastro {
   private auth = inject(AuthService);
   private router = inject(Router);
   nome = signal(''); email = signal(''); senha = signal(''); confirmar = signal('');
-  erro = signal<string | null>(null); carregando = signal(false);
+  erro = signal<string | null>(null); aviso = signal<string | null>(null); carregando = signal(false);
 
   async criar(): Promise<void> {
-    this.erro.set(null);
+    this.erro.set(null); this.aviso.set(null);
     if (this.senha() !== this.confirmar()) { this.erro.set('As senhas não coincidem.'); return; }
     this.carregando.set(true);
     try {
-      await this.auth.register(this.nome(), this.email(), this.senha());
-      await this.auth.login(this.email(), this.senha());
+      const avisar = () => this.aviso.set('Servidor está iniciando, aguarde...');
+      await this.auth.register(this.nome(), this.email(), this.senha(), avisar);
+      await this.auth.login(this.email(), this.senha(), avisar);
       this.router.navigate(['/']);
     } catch (e: any) {
       this.erro.set(e?.mensagem ?? 'Falha ao criar conta.');
     } finally {
       this.carregando.set(false);
+      this.aviso.set(null);
     }
   }
   irLogin(): void { this.router.navigate(['/login']); }

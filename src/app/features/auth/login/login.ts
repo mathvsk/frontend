@@ -16,6 +16,7 @@ import { UiTextField } from '../../../shared/ui/ui-text-field';
       </div>
       <app-text-field label="E-mail" type="email" [value]="email()" (valueChange)="email.set($event)" />
       <app-text-field label="Senha" type="password" [value]="senha()" (valueChange)="senha.set($event)" [erro]="erro()" />
+      @if (aviso()) { <p class="text-center text-[13px] text-muted">{{ aviso() }}</p> }
       <app-button type="button" [disabled]="carregando()" (click)="entrar()">Entrar</app-button>
       <app-button variant="ghost" (click)="irCadastro()">Criar conta</app-button>
     </main>`,
@@ -25,17 +26,20 @@ export class Login {
   private router = inject(Router);
   email = signal(''); senha = signal('');
   erro = signal<string | null>(null);
+  aviso = signal<string | null>(null);
   carregando = signal(false);
 
   async entrar(): Promise<void> {
-    this.erro.set(null); this.carregando.set(true);
+    this.erro.set(null); this.aviso.set(null); this.carregando.set(true);
     try {
-      await this.auth.login(this.email(), this.senha());
+      await this.auth.login(this.email(), this.senha(),
+        () => this.aviso.set('Servidor está iniciando, aguarde...'));
       this.router.navigate(['/']);
     } catch (e: any) {
       this.erro.set(e?.mensagem ?? 'Falha ao entrar.');
     } finally {
       this.carregando.set(false);
+      this.aviso.set(null);
     }
   }
   irCadastro(): void { this.router.navigate(['/cadastro']); }

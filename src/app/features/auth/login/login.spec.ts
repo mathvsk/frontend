@@ -18,7 +18,7 @@ describe('Login', () => {
     const cmp = TestBed.createComponent(Login).componentInstance;
     cmp.email.set('a@b.com'); cmp.senha.set('Senha@123');
     await cmp.entrar();
-    expect(auth.login).toHaveBeenCalledWith('a@b.com', 'Senha@123');
+    expect(auth.login).toHaveBeenCalledWith('a@b.com', 'Senha@123', expect.any(Function));
     expect(router.navigate).toHaveBeenCalledWith(['/']);
   });
 
