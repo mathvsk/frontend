@@ -13,8 +13,12 @@ interface UsuarioAtual { id: number; email: string; perfil: Perfil; }
 // 429 aqui não é rate limit do backend: é o próprio edge do Render recusando
 // pings de wake-up repetidos enquanto o serviço hiberna
 // (header X-Render-Routing: hibernate-rate-limited).
+// Poucas tentativas bem espaçadas: martelar o edge com pings frequentes
+// alimenta o próprio hibernate-rate-limited (a janela de bloqueio parece
+// reiniciar a cada tentativa), então o espaçamento é o que dá chance do
+// Render terminar de religar o container.
 const STATUS_COLD_START = [0, 429, 502, 503, 504];
-const TENTATIVAS_COLD_START = 5;
+const TENTATIVAS_COLD_START = 3;
 
 function retryColdStart<T>(onTentativa?: (tentativa: number) => void) {
   return retry<T>({
@@ -22,7 +26,7 @@ function retryColdStart<T>(onTentativa?: (tentativa: number) => void) {
     delay: (erro: { status?: number }, tentativa) => {
       if (!STATUS_COLD_START.includes(erro?.status ?? -1)) throw erro;
       onTentativa?.(tentativa);
-      return timer(tentativa * 5000);
+      return timer(tentativa * 20000);
     },
   });
 }
